@@ -26,8 +26,8 @@ contract Producer {
     // mapping (uint => address[]) licensedProducers;  
 
     // address and trackID -> true if licensed
-    mapping (address => mapping(uint => bool)) private hasExclusiveLicenseMap;
-    mapping (address => mapping(uint => bool)) private hasNonExclusiveLicenseMap;
+    // mapping (address => mapping(uint => bool)) private hasExclusiveLicenseMap;
+    // mapping (address => mapping(uint => bool)) private hasNonExclusiveLicenseMap;
     
 
     enum LicenseType {Exclusive, NonExclusive}
@@ -41,7 +41,7 @@ contract Producer {
         address trackOwner;
     }
 
-    
+    // this trackID refers to the trackID from the owner
     struct LicensedTrack {
         address owner;
         uint trackID;
@@ -70,11 +70,19 @@ contract Producer {
         owner = _owner;
 
     }
-    function setExclusivePrice(uint _trackID, uint _price) private isOwner {
+    function setExclusivePrice(uint _trackID, uint _price) public isOwner {
         excluPrice[_trackID] = _price;
     }
-    function setNonExclusivePrice(uint _trackID, uint _price) private isOwner {
+    function setNonExclusivePrice(uint _trackID, uint _price) public isOwner {
         nonExcluPrice[_trackID] = _price;
+    }
+
+    function getExclusivePrice(uint _trackID) public view returns(uint) {
+        return excluPrice[_trackID];
+    }
+
+    function getNonExclusivePrice(uint _trackID) public view returns(uint) {
+        return nonExcluPrice[_trackID];
     }
 
     // When a user uploads a new track; CID is created in browser
@@ -93,23 +101,15 @@ contract Producer {
         if (_licenseType == LicenseType.Exclusive) {
             require(msg.value >= excluPrice[_trackID]);
             // pay the producer
-            // (bool sent, bytes memory data) = _owner.call{value: excluPrice[_trackID]}("");
-            // require(sent, "Failed to send Ether");
             _owner.transfer(excluPrice[_trackID]);
 
             // add track to licensedTracks
-            
-            // LicensedTrack memory lt = (_owner, _trackID, LicenseType.Exclusive);
             licensedTracks.push(LicensedTrack(_owner, _trackID, LicenseType.Exclusive));
         }
 
         else if (_licenseType == LicenseType.NonExclusive) {
             require(msg.value >= nonExcluPrice[_trackID]);
-            // (bool sent, bytes memory data) = _owner.call{value: nonExcluPrice[_trackID]}("");
-            // require(sent, "Failed to send Ether");
             _owner.transfer(nonExcluPrice[_trackID]);
-
-            // LicensedTrack memory lt = (_owner, _trackID, LicenseType.NonExclusive);
             licensedTracks.push(LicensedTrack(_owner, _trackID, LicenseType.NonExclusive));
         }
 
