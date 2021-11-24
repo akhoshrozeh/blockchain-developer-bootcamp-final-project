@@ -25,7 +25,7 @@ contract ProducerFactory {
     }
 
     function createProducer(string memory _name) public returns(Producer){
-        // require(producerExistsMap[msg.sender] == false);
+        require(producerExistsMap[msg.sender] == false);
         Producer p = new Producer(_name, msg.sender);
         addressToProdID[msg.sender] = p;
         ownerToContract[msg.sender] = address(p);
