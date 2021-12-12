@@ -1,5 +1,6 @@
-pragma solidity >=0.5.16 <0.9.0;
-pragma experimental ABIEncoderV2;
+pragma solidity 0.8.10;
+// pragma solidity >=0.5.16 <0.9.0;
+// pragma experimental ABIEncoderV2;
 // farm enemy snake boss sunset wolf action humble motor donkey under cream
 import './Producer.sol';
 
@@ -24,16 +25,16 @@ contract ProducerFactory {
         _;
     }
 
-    function createProducer(string memory _name) public returns(Producer){
-        // require(producerExistsMap[msg.sender] == false);
-        Producer p = new Producer(_name, msg.sender);
+    function createProducer(string memory _name) public returns(address){
+        require(producerExistsMap[msg.sender] == false);
+        Producer p = new Producer(_name, payable(msg.sender));
         addressToProdID[msg.sender] = p;
         ownerToContract[msg.sender] = address(p);
         prodAddresses.push(address(p));
         producers.push(p);
         producerExistsMap[msg.sender] = true;
         emit ProducerCreated(msg.sender);
-        return p;
+        return address(p);
     }
 
     function getProducers() public view returns(address[] memory) {
