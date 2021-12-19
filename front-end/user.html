@@ -13,26 +13,22 @@
 </head>
 <body>
     <h1>BlockBeats</h1>
-    <!-- <div> 
-        <div>Connect to MetaMask to use the system!</div>
-        <ol> <b>Things we want from the dapp</b>
-            <li>Detect metamask is/is not install</li>
-            <li>allow the user to get access to MetaMask</li>
-            <li>allow the user to send a txn/update
-            contract state (i.e. send a txn to a contract) </li>
-            <li>allow the user to read state from a contract</li>
-        </ol>
-    </div> -->
-    <div id="home">
-        <div id="mm-detection"> Detecting... </div>
-        <button id='mm-cxn-button'>Connect to MetaMask</button>
-        <div id="mm-curr-acc"></div>
+    <div id="user-profile">
+        <div id="contract-meta"></div><br>
+        <div id='tracks'>
+            Tracks
+        </div>
+
+        <div id='lic-tracks'>
+            Licensed Tracks  
+        </div>
+        
     </div>
     
 
 
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="dapp.js"></script>
+    <script src="user.js"></script>
 
 
 </body>

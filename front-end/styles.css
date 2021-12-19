@@ -1,0 +1,24 @@
+html {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    color: black;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(to bottom left, rgba(0, 255, 255, 0.527), rgba(0, 132, 255, 0.883));
+    /* background-color: red; For browsers that do not support gradients */
+}
+
+button, input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+}
+div {
+    text-align: center;
+}
+
+#tracks, #lic-tracks {
+    display: inline;
+    font-size: 30px;
+    padding: 150px;
+    pointer-events: none;
+}

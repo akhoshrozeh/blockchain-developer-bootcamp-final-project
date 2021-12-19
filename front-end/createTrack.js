@@ -1,9 +1,3 @@
-let walletDetected = false;
-let userAddress;
-let userContractAddress;
-let walletConnected = false;
-
-// this is the address in ganache
 const factoryAddress = "0x47D49485B0A4eE6448F1D0511021184BFF3784bB";
 const factoryABI = [
     {
@@ -467,126 +461,44 @@ const producerABI = [
     }
   ];
 
-// Detect metamask is/is not install
-window.addEventListener("load", function() {
-    if (typeof window.ethereum !==  'undefined') {
-        walletDetected = true;
-        console.log("MetaMask is installed. Sweet!");
-        let wallDetect = this.document.getElementById('mm-detection');
-        wallDetect.innerHTML += "MetaMask has been detected!"
-    }
-    else {
-        let wallDetect = this.document.getElementById('mm-detection');
-        wallDetect.innerHTML += "MetaMask was not detected. Please install MetaMask to use this dApp."
-        console.log('MetaMask not available.');
-        this.alert("Please install MetaMask to use this dApp!");
-    }
-});
-
-// web3 instance
 web3 = new Web3(window.ethereum)
 
-// create the producer factory contract instance
 let factory = new web3.eth.Contract(factoryABI, factoryAddress);
-let prodExists;
-let clickCount = 0;
-// allow the user to get access to MetaMask
-const mmCxn = document.getElementById('mm-cxn-button');
-mmCxn.onclick = async () => { 
-    await ethereum.request({ method: 'eth_requestAccounts'});
-    const mmCurrAcc = document.getElementById('mm-curr-acc');
-    userAddress = ethereum.selectedAddress;
-    mmCurrAcc.innerHTML = "Here's your current account: <strong><i>" + userAddress + "</strong></i>";
-    walletConnected = true;
 
-    // check if current account has a Producer contract
-    prodExists = await factory.methods.producerExists(userAddress).call();
-
-    if (clickCount !== 0) {
-        return;
-    }
-    // To do 
-    if (prodExists === true) {
-        console.log("Producer exists..");
-        userContractAddress = await factory.methods.getOwnersContract(userAddress).call();
-        document.getElementById("mm-detection").remove();
-        document.getElementById("mm-cxn-button").remove();
-        
-        const div = document.createElement("div");
-        const p1 = document.createElement("p");
-        const p2 = document.createElement("p");
+const urlSearchParams = new URLSearchParams(window.location.search);
+const params = Object.fromEntries(urlSearchParams.entries());
+let searchAddress = params.contractOwner
 
 
-        const t1 = document.createTextNode("Producer contract associated with Ethereum address found!");
-        const t2 = document.createTextNode("Redirecting to your user page in 3 seconds...");
-        p1.appendChild(t1);
-        // p1.appendChild(br);
-        p2.appendChild(t2);
-        div.appendChild(p1);
-        div.appendChild(p2);
-        let ele = document.getElementById("home");
-        ele.appendChild(div);
-        await sleep(3000);
-        location.replace('./user.html?contractOwner=' + userAddress)
-        // location.replace('./user.html?contractOwner=' + userContractAddress)
+document.getElementById("create-but").addEventListener("click", createTrack)
+document.getElementById("user-but").addEventListener("click", gotoUserPage);
 
-    }
-
-    // let user create 
-    else {
-        console.log("producer doesn't exist");
-        displayNotRegisteredMessage();
-        displayRegistration();
-    }
-    clickCount++;
-};
-
-// deploy ProducerFactory
-function displayNotRegisteredMessage() {
-    const div = document.createElement("div");
-    const p1 = document.createElement("p");
-    const p2 = document.createElement("p");
-    
-    const t1 = document.createTextNode("This Ethereum account doesn't have a Producer contract registered to it!\n");
-    const t2 = document.createTextNode("Please enter a Producer name and click 'Register'.");
-    p1.appendChild(t1);
-    p2.appendChild(t2);
-    div.appendChild(p1);
-    div.appendChild(p2);
-    let ele = document.getElementById("home");
-    ele.appendChild(div);
+function gotoUserPage() {
+    location.replace('./user.html?contractOwner=' + searchAddress)
 }
 
-async function createProducer() {
-    console.log("Producer created!")
-    const producerName  = document.getElementById("prod-name").value;
-    console.log("Here's your name:", producerName);
-    await factory.methods.createProducer(producerName).send({from:userAddress});
-    userContractAddress = await factory.methods.getOwnersContract(userAddress).call();
-    console.log(userContractAddress);
+function getTrackInfo() {
+    let name = document.getElementById("name").value
+    let cid = document.getElementById("cid").value
+    let excluPrice = document.getElementById("exclu-price").value
+    let nonexluPrice = document.getElementById("non-exclu-price").value
+    const trackInfo = [name, cid, excluPrice, nonexluPrice]
+    return trackInfo;
 }
 
-function displayRegistration() {
-    const form1 = document.createElement("form");
-    let input1 = document.createElement("input")
-    input1.type = "text";
-    input1.name = "prod-name";
-    input1.id = "prod-name";
-    let but1 = document.createElement("button");
-    but1.type = "button"
-    but1.id = "reg-but";
-    but1.onclick="createProducer()";
-    but1.innerHTML = "Register"
-    form1.appendChild(input1);
-    form1.appendChild(but1);
-    let ele = document.getElementById("home");
-    ele.appendChild(form1);
-    document.getElementById("reg-but").addEventListener("click", createProducer)
+async function createTrack() {
+    const trackInfo = getTrackInfo();
+    console.log(trackInfo)
+    try {
+        console.log(searchAddress)
+        let searchContractAddress = await factory.methods.getOwnersContract(searchAddress).call();
+        console.log(searchContractAddress);
+        let ownerContract = new web3.eth.Contract(producerABI, searchContractAddress);
+        await ownerContract.methods.createTrack(trackInfo[0], trackInfo[1], trackInfo[2], trackInfo[3]).send({from: ethereum.selectedAddress});
+
+    }
+    catch(e) {
+        console.log(e);
+    }
+
 }
-
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-// allow the user to send a txn/update contract state (i.e. send a txn to a contract)

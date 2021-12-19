@@ -1,9 +1,3 @@
-let walletDetected = false;
-let userAddress;
-let userContractAddress;
-let walletConnected = false;
-
-// this is the address in ganache
 const factoryAddress = "0x47D49485B0A4eE6448F1D0511021184BFF3784bB";
 const factoryABI = [
     {
@@ -466,127 +460,120 @@ const producerABI = [
       "type": "function"
     }
   ];
+// let isPageOwner = (ethereum.selectedAddress === )
 
-// Detect metamask is/is not install
-window.addEventListener("load", function() {
-    if (typeof window.ethereum !==  'undefined') {
-        walletDetected = true;
-        console.log("MetaMask is installed. Sweet!");
-        let wallDetect = this.document.getElementById('mm-detection');
-        wallDetect.innerHTML += "MetaMask has been detected!"
-    }
-    else {
-        let wallDetect = this.document.getElementById('mm-detection');
-        wallDetect.innerHTML += "MetaMask was not detected. Please install MetaMask to use this dApp."
-        console.log('MetaMask not available.');
-        this.alert("Please install MetaMask to use this dApp!");
-    }
-});
+  web3 = new Web3(window.ethereum)
 
-// web3 instance
-web3 = new Web3(window.ethereum)
-
-// create the producer factory contract instance
 let factory = new web3.eth.Contract(factoryABI, factoryAddress);
-let prodExists;
-let clickCount = 0;
-// allow the user to get access to MetaMask
-const mmCxn = document.getElementById('mm-cxn-button');
-mmCxn.onclick = async () => { 
-    await ethereum.request({ method: 'eth_requestAccounts'});
-    const mmCurrAcc = document.getElementById('mm-curr-acc');
-    userAddress = ethereum.selectedAddress;
-    mmCurrAcc.innerHTML = "Here's your current account: <strong><i>" + userAddress + "</strong></i>";
-    walletConnected = true;
 
-    // check if current account has a Producer contract
-    prodExists = await factory.methods.producerExists(userAddress).call();
+let mmUserAddress;
+let searchAddress;
+let searchContractAddress;
+let searchContract;
+const urlSearchParams = new URLSearchParams(window.location.search);
+const params = Object.fromEntries(urlSearchParams.entries());
+searchAddress = params.contractOwner
 
-    if (clickCount !== 0) {
-        return;
+
+
+let selectedTrack = null;
+let selectedLicensedTrack = null;
+
+async function showAddresses() {
+  try {
+    let prodExists = await factory.methods.producerExists(searchAddress).call();
+    if (!prodExists) {
+      alert("Account doesn't exist. Make sure this Ethereum address has a BlockBeats account.");
     }
-    // To do 
-    if (prodExists === true) {
-        console.log("Producer exists..");
-        userContractAddress = await factory.methods.getOwnersContract(userAddress).call();
-        document.getElementById("mm-detection").remove();
-        document.getElementById("mm-cxn-button").remove();
-        
-        const div = document.createElement("div");
-        const p1 = document.createElement("p");
-        const p2 = document.createElement("p");
-
-
-        const t1 = document.createTextNode("Producer contract associated with Ethereum address found!");
-        const t2 = document.createTextNode("Redirecting to your user page in 3 seconds...");
-        p1.appendChild(t1);
-        // p1.appendChild(br);
-        p2.appendChild(t2);
-        div.appendChild(p1);
-        div.appendChild(p2);
-        let ele = document.getElementById("home");
-        ele.appendChild(div);
-        await sleep(3000);
-        location.replace('./user.html?contractOwner=' + userAddress)
-        // location.replace('./user.html?contractOwner=' + userContractAddress)
-
-    }
-
-    // let user create 
     else {
-        console.log("producer doesn't exist");
-        displayNotRegisteredMessage();
-        displayRegistration();
+        searchContractAddress = await factory.methods.getOwnersContract(searchAddress).call();
+        document.getElementById("contract-meta").innerHTML = "Contract Owner: " + searchAddress + "<br>";
+        document.getElementById("contract-meta").innerHTML += "Contract Address: " + searchContractAddress;
+        
     }
-    clickCount++;
-};
-
-// deploy ProducerFactory
-function displayNotRegisteredMessage() {
-    const div = document.createElement("div");
-    const p1 = document.createElement("p");
-    const p2 = document.createElement("p");
-    
-    const t1 = document.createTextNode("This Ethereum account doesn't have a Producer contract registered to it!\n");
-    const t2 = document.createTextNode("Please enter a Producer name and click 'Register'.");
-    p1.appendChild(t1);
-    p2.appendChild(t2);
-    div.appendChild(p1);
-    div.appendChild(p2);
-    let ele = document.getElementById("home");
-    ele.appendChild(div);
-}
-
-async function createProducer() {
-    console.log("Producer created!")
-    const producerName  = document.getElementById("prod-name").value;
-    console.log("Here's your name:", producerName);
-    await factory.methods.createProducer(producerName).send({from:userAddress});
-    userContractAddress = await factory.methods.getOwnersContract(userAddress).call();
-    console.log(userContractAddress);
-}
-
-function displayRegistration() {
-    const form1 = document.createElement("form");
-    let input1 = document.createElement("input")
-    input1.type = "text";
-    input1.name = "prod-name";
-    input1.id = "prod-name";
-    let but1 = document.createElement("button");
-    but1.type = "button"
-    but1.id = "reg-but";
-    but1.onclick="createProducer()";
-    but1.innerHTML = "Register"
-    form1.appendChild(input1);
-    form1.appendChild(but1);
-    let ele = document.getElementById("home");
-    ele.appendChild(form1);
-    document.getElementById("reg-but").addEventListener("click", createProducer)
-}
-
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
+  catch(e) {
+    alert("Please enter a valid Ethereum address in the URL as such: `user.html?contractOwner={validEOA}`")
+    return -1;
+  }
+}
 
-// allow the user to send a txn/update contract state (i.e. send a txn to a contract)
+async function createContract() {
+    try {
+
+        searchContract = new web3.eth.Contract(producerABI, searchContractAddress);
+    }
+    catch(e) {
+        alert("You've entered an invalid contract address! Try again.")
+    }
+}
+
+async function isOwner() {
+    await ethereum.request({method: 'eth_requestAccounts'});
+    mmUserAddress = ethereum.selectedAddress;
+
+    if (mmUserAddress === searchAddress) 
+      return true;
+    else 
+      return false;
+}
+
+async function renderCreateTrackButton() {
+  const div = document.createElement("div");
+  div.id = "create-track-div"
+  const b = document.createElement("button");
+  b.type = "button";
+  b.id = "create-track-but";
+  b.onclick="gotoCreateTrackPage()";
+  b.innerHTML = "Create Track";
+  div.appendChild(b);
+  let ele = document.getElementById("contract-meta");
+  ele.insertAdjacentElement('afterend', div);
+  document.getElementById("create-track-but").addEventListener("click", gotoCreateTrackPage)
+}
+
+// TODO: Implement the location.replace function
+// TODO: need to create that .html and .js files for that page
+function gotoCreateTrackPage() {
+  console.log("going to create track page...")
+  location.replace('./createTrack.html?contractOwner=' + searchAddress)
+}
+
+async function showTracks() {
+
+}
+
+async function showLicTracks() {
+
+}
+
+
+
+async function render() {
+    let r = await showAddresses();
+    if(r === -1) return;
+    let isOwnerBool = await isOwner();
+    await createContract();
+    console.log(searchContract.methods)
+    await showTracks();
+    await showLicTracks();
+    
+
+    // user looking at own page  
+    if (isOwnerBool === true) {
+        console.log("is owner")
+        await renderCreateTrackButton();
+    }
+
+    // user looking at another account's page
+    else {
+        console.log("not owner")
+    }
+
+}
+
+render()
+
+
+
+
