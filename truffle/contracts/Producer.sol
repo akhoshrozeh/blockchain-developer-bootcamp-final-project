@@ -20,8 +20,11 @@ contract Producer {
     // maps track id to nonExclusive license price
     mapping (uint => uint) nonExcluPrice;
 
-
-    
+    mapping (address => mapping (uint => mapping (uint => bool))) private alreadyBought;
+    // alreadyBought[owner][trackID][0] = true;
+    // alreadyBought[owner][trackID][1] = false;
+    // * person has bought an exclusive license but not  a non exclusive
+    // need to create a public function to access this data structure
 
     // trackID -> array of addresses 
     // mapping (uint => address[]) licensedProducers;  
@@ -111,6 +114,7 @@ contract Producer {
     function buyLicense(address payable _owner, address payable _contract,  uint _trackID, LicenseType _licenseType) 
         public payable {
         require(msg.sender != _owner);
+        require(_owner != owner);
         require((_licenseType == LicenseType.Exclusive || _licenseType == LicenseType.NonExclusive),
          "Enter a valid LicenseType (0 or 1)");
         // string memory _CID;
@@ -119,6 +123,10 @@ contract Producer {
         bool sent = false;
         // require msg.sender isnt owner !!
         if (_licenseType == LicenseType.Exclusive) {
+            // check if already owned
+            // create a 3d mapping [owner][trackID] => bool
+            require(alreadyBought[_owner][_trackID][0] == false);
+            alreadyBought[_owner][_trackID][0] = true;
             _price = seller.getExclusivePrice(_trackID);
             require(msg.value >= _price);
             (sent, ) = _owner.call{value: _price}("");
@@ -128,6 +136,8 @@ contract Producer {
         }
 
         else if (_licenseType == LicenseType.NonExclusive) {
+            require(alreadyBought[_owner][_trackID][1] == false);
+            alreadyBought[_owner][_trackID][1] = true;
             _price = seller.getNonExclusivePrice(_trackID);
             require(msg.value >= _price);
             (sent, ) = _owner.call{value: _price}("");
