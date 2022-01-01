@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="refresh" content="3" > -->
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>BlockBeats</title>
+</head>
+<body id="body">
+    <h1>BlockBeats</h1>
+    <form id="track-form">
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="cid" placeholder="IPFS CID">
+        <input type="text" id="exclu-price" placeholder="Exclusive License Price (Wei)">
+        <input type="text" id="non-exclu-price" placeholder="Non-Exclusive License Price (Wei)">
+        <button type="button" id="create-but">Create</button>
+    </form>
+
+    <button type="button" id="user-but">Go to User Page</button>
+    
+    
+
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <!-- <script src="dapp.js"></script> -->
+    <script src="createTrack.js"></script>
+
+
+</body>
+
+</html>
