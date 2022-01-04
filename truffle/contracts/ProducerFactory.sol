@@ -1,32 +1,34 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.10;
-// pragma solidity >=0.5.16 <0.9.0;
-// pragma experimental ABIEncoderV2;
-// farm enemy snake boss sunset wolf action humble motor donkey under cream
+
 import './Producer.sol';
 
+/// @title A contract to get create and retrieve 'Producers'
+/// @author Anthony Khoshrozeh
+/// @notice You can use this contract to dynamically create 'Producer' contracts and retrieve 'Producer' contracts
 contract ProducerFactory {
     Producer[] producers;
+
+    /// @notice This array contains all contract addresses of 'Producers'
     address[] public prodAddresses;
+
     mapping (address => Producer) private addressToProdID;
     mapping (address => bool) private producerExistsMap;
     mapping (address => address) private ownerToContract;
 
-    // struct Track {
-    //     string name;
-    //     string CID;
-    //     uint trackID;
-    //     address trackOwner;
-    // }
-
+    /// @param owner The owner of the contract
+    /// @notice You can use this contract to dynamically create 'Producer' contracts and retrieve 'Producer' contracts
     event ProducerCreated(address owner);
 
-    modifier isProducer() {
-        require(producerExistsMap[msg.sender] == true);
+    modifier isNotProducer() {
+        require(producerExistsMap[msg.sender] == false);
         _;
     }
 
-    function createProducer(string memory _name) public returns(address){
-        require(producerExistsMap[msg.sender] == false);
+    /// @param _name The name of the Producer; equivalent to the artist's name
+    /// @notice Creates the Producer contract and stores its address and txn receipt
+    /// @return Returns the address of the Producer contract created
+    function createProducer(string memory _name) public isNotProducer returns(address){
         Producer p = new Producer(_name, payable(msg.sender));
         addressToProdID[msg.sender] = p;
         ownerToContract[msg.sender] = address(p);
@@ -37,38 +39,28 @@ contract ProducerFactory {
         return address(p);
     }
 
+    /// @notice Returns the list of all Producer contract addresses
     function getProducers() public view returns(address[] memory) {
         return prodAddresses;
     }
 
+    /// @param _prodAddr The user's EOA address
+    /// @notice Given an EOA address, it returns the corresponding Producer contract creation receipt
     function getProducer(address _prodAddr) public view returns(Producer) {
         return addressToProdID[_prodAddr];
     }
 
+    /// @param _producer The user's EOA address
+    /// @notice Returns true if this account has already created an address; false if they haven't
     function producerExists(address _producer) public view returns(bool) {
         return producerExistsMap[_producer];
     }
 
+    /// @param _owner The user's EOA address
+    /// @notice Given an EOA address, it returns the corresponding Producer contract address
     function getOwnersContract(address _owner) public view returns(address) {
         return ownerToContract[_owner];
     }
 
-    // function getTrack(address _owner, uint _trackID) public returns(Track memory){
-    //     return addressToProdID[_owner].getTrack(_trackID);
-    // }
-
-    // function getTracks(address _owner) public returns (Track[] memory) {
-    //     return addressToProdID[_owner].getTracks();
-    // }
-
-
-    // // should use the mapping
-    // function verifyExlusiveLicense(address _owner, address _licenseHolder, uint _trackID) public returns(bool) {
-    //     return addressToProdID[_owner].hasExclusiveLicense(_licenseHolder, _trackID);
-    // }
-
-    // function verifyNonExlusiveLicense(address _owner, address _licenseHolder, uint _trackID) public returns(bool) {
-    //     return addressToProdID[_owner].hasNonExclusiveLicense(_licenseHolder, _trackID);
-    // }
 
 }
