@@ -4,20 +4,7 @@ const fs = require('fs');
 
 
 
-
-
-
-
-
-// * Things to test for ProducerFactory:
-//* getProducers() returns addresses and correct number of them
-//* getProducer() returns the correct txn obj
-//* producerExists() is correct
-//* getOwnersContract() is correct
-//* cant create two Producer contracts from single address (txn reverts)
-
-
-// this function takes the address of a user who owns a producer contract
+// Helper function takes the address of a user who owns a producer contract
 // it creates & returns a Contract object from the address and ABI
 async function makeContract(owner) {
     let factory = await ProducerFactory.deployed();
@@ -31,14 +18,19 @@ async function makeContract(owner) {
 }
 
 contract('ProducerFactory', async accounts => {
+    /*
+    NOTE:   The following tests are for ProducerFactory.sol. 
+            Producer.sol is tested below that but under the same test suite. 
+    */
 
+    // Checks that new ProducerFactory contract has no deployed Producers
     it("returns no producers", async() => {
         const factory = await ProducerFactory.deployed();
         let producers = await factory.getProducers()
         assert.equal(producers.length, 0);
     });
 
-
+    // Creates 10 Producers and checks they are all stored in the ProducerFactory contract
     it("returns correct number of producers", async() => {
         const factory = await ProducerFactory.deployed();
         for(let i = 0; i < 10; i++) {
@@ -48,7 +40,7 @@ contract('ProducerFactory', async accounts => {
         assert.equal(producers.length, 10);
     });
 
-
+    // Checks that all owner addresses of Producers are mapped in the ProducerFactory contract
     it("created producers exist in mapping", async() => {
         const factory = await ProducerFactory.deployed();
         let res = true;
@@ -62,13 +54,13 @@ contract('ProducerFactory', async accounts => {
         assert.equal(res, true);
     });
 
-
+    // Checks a nonexistent user doesn't exist in the mapping 
     it("nonexistent producer returns false", async() => {
         let factory = await ProducerFactory.deployed();
         assert.equal(false, await factory.producerExists("0xc0ffee254729296a45a3885639AC7E10F9d54979"));
     });
 
-
+    // Checks the contract address of a Producer is correctly stored
     it("retrival of owner's contract", async() => {
         let factory = await ProducerFactory.deployed();
         let contractAddr = await factory.getProducers();
@@ -76,24 +68,17 @@ contract('ProducerFactory', async accounts => {
         assert.equal(contractAddr, await factory.getOwnersContract(accounts[5]));
     });
 
-
+    // Checks the the same EOA account can't create multiple Producer contracts. 
+    // This could later be changed but it is part of the design as of right now. 
     it("multiple calls to createProducer() from same address revert", async() => {
         let factory = await ProducerFactory.deployed();
         await truffleAssert.reverts(factory.createProducer("dj dude"));
     });
 
 
-    // ************** Now testing Producer.sol functionalties ************
+    // ************** Testing Producer.sol functionalties ************
 
-    //* Things to test for Producer 
-    //* setExclusivePrice and setNonExclusivePrice work
-    //* getExclusivePrice and getNonExclusivePrice work
-    //* createTrack() correctly adds the track
-    //* buyLicense updates LicensedTrack[] and returns CID
-    //* getTrack() returns correct Track
-    //* getTracks() returns correct array of Tracks
-    //* getLicensedTracks() retusn correct list of licensedTracks
-
+    // Checks the we can instantiate the Contract object from contract address and its ABI
     it("instantiate contract from address and abi; gets name", async() => {
         let p0 = await makeContract(accounts[0]);
         // console.log(await p0.methods.getName().call());
@@ -101,6 +86,8 @@ contract('ProducerFactory', async accounts => {
         assert.equal("0", name);
     });
 
+    // Checks that when a Producer creates a contract it is stored correctly in that contract
+    // Also checks proper querying of its license prices
     it("creates a track with correct information", async() => {
         let p0 = await makeContract(accounts[0]);
         await p0.methods.createTrack("track1", "cid1", 20, 10).send({from: accounts[0], gas:1000000});
@@ -121,6 +108,7 @@ contract('ProducerFactory', async accounts => {
 
     });
 
+    // Checks that a contract can correcly update the license prices
     it("changing track license prices", async() => {
         let p0 = await makeContract(accounts[0]);
         await p0.methods.setExclusivePrice(0, 100).send({from: accounts[0], gas:1000000});
@@ -135,6 +123,8 @@ contract('ProducerFactory', async accounts => {
     });
 
 
+    // Checks that a Producer can a buy a license to another Producer's track and correctly stores the Licensed Track
+    // Also checks that the correct amount of Wei was charged
     it("buys license and stores license; checks balance", async() => {
         const factory = ProducerFactory.deployed();
         let p0 = await makeContract(accounts[0]);
