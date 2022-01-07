@@ -10,13 +10,14 @@ https://hopeful-franklin-f7fc17.netlify.app
 2. Dependencies are already included in `node_modules`, but run `npm install` to be safe.
 
 ### Setting up the local network
-1. Open Ganache and create a new project with `truffle_config.js` 
-2. Set Network ID to 5777 and port number 8545
-3. In your terminal, run `truffle migrate --network development` to deploy contracts to your local blockchain 
+1. Go to `/truffle` and run `truffle compile`
+2. Open Ganache and click a `New Workspace` with and then click `Add a project` and select `truffle_config.js` inside `/truffle` 
+3. Set Network ID to 5777 and port number 8545
+4. In your terminal, run `truffle migrate --network development` to deploy contracts to your local blockchain 
 
 ### Setting up the Front End
-1. Go to `/truffle/` and run `./copy_abis.sh` to copy the contract artifacts to the `/front-end` directory. If you get a permission error in terminal, run `chmod +x copy_abis.sh` you enable execution permission. 
-2. Go to `/front-end/` and change the variable `const factoryAddress` in all `.js` files to `const factoryAddress="{Contract Address of deployed ProducerFactory.sol contract}". This makes sure your front-end is interacting with the correct contract. It is currently set to the contract address of the deployed contract on Rinkeby.
+1. Go to `/truffle` and run `./copy_abis.sh` to copy the contract artifacts to the `/front-end` directory. If you get a permission error in terminal, run `chmod +x copy_abis.sh` you enable execution permission. 
+2. Go to `/front-end` and change the variable `const factoryAddress` in all `.js` files to `const factoryAddress="{Contract Address of deployed ProducerFactory.sol contract}". This makes sure your front-end is interacting with the correct contract. It is currently set to the contract address of the deployed contract on Rinkeby.
 3. You can either simply open `/front-end/index.html` in your browser. Alternatively, you can open the directory in VS Code, right click on `index.html` and click `Open with Live Server`. You need to first have the Live Share extension in VS Code installed for this. This spins up a local server and any changes to a file are automatically reflected in the app (no need to keep refreshing).
 4. Once the app is running, make sure you have MetaMask installed in your browser. You should use Chrome, as Brave Browser was having some issues connecting. 
 5. Change the Network in MetaMask to `LocalHost 8545` or if you don't have it, set it up with the same network ID and port number as you did in Ganache. 
@@ -24,12 +25,36 @@ https://hopeful-franklin-f7fc17.netlify.app
 
 ## Running Tests
 Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_producerFactory-tests.js`
-1. Go to `/truffle/` directory
+1. Go to `/truffle` directory
 2. Run `truffle test`
 
 ## Deploying your own ProducerFactory to a testnet (Rinkeby)
-### Create an Infura account
+### Setting up Infura Project
+1. Go to https://infura.io/
+2. Create an Infura account or sign in to an existing account and select `Create a New Project`.  
 
+### .env file
+1. Create a file called `.env` in `/truffle`
+2. Write your Infura credentials to file. Your `.env` should look like this:  \
+    `MNEMONIC="{Your MNEMONICs}"` \
+    `INFURA_URL={Your Infura endpoint URL}`
+**!! IMPORTANT: Make sure you add the `.env` file to `.gitignore`. Otherwise you won't have protected your private key.**
+3. Add this at the top of your `truffle_config.js` file:
+  ```
+  const HDWalletProvider = require('@truffle/hdwallet-provider');
+  const dotenv = require('dotenv');
+  dotenv.config();
+  const mnemonic = process.env.MNEMONIC;
+  ```
+4. Add this under `module.exports` and under `networks` to target the Rinkeby network:
+  ```
+      rinkeby: {
+      provider: () => new HDWalletProvider(mnemonic, process.env.INFURA_URL),
+      network_id: "4",
+      gas: 5500000
+    }
+  ```
+5. Then run `truffle migrate --network rinkeby`. Note: Make sure you have Eth in your Ethereum account on the Rinkeby network. You can get some from https://faucets.chain.link/rinkeby
 
 
 ## General Architecture (UML diagrams in progress)
