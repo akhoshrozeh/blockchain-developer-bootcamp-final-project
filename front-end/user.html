@@ -14,8 +14,11 @@
 <body>
     <h1 class="toolbar">BlockBeats</h1>
     <button class="toolbar" id="profile-but">Profile</button>
+    <button class="toolbar" id="home-but">Home</button>
+    
     <div id="user-profile">
         <div id="contract-meta"></div><br>
+        <p id="selected-track-display">Selected Track: Null</p>
         <div id='tracks'>
             Tracks
         </div>
@@ -29,7 +32,8 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="user.js"></script>
+    <script type="module" src="user.js"></script>
+    
 
 
 </body>

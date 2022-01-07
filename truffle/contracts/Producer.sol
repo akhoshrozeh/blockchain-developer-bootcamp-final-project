@@ -60,11 +60,6 @@ contract Producer {
         require(msg.sender == owner);
         _;
     }
-
-    modifier hasValidFunds(uint _price) {
-        require(msg.value >= _price);
-        _;
-    }
     
     /// @notice The _owner parameter is the account who called 'createProducer' in ProducerFactory.sol
     /// @param _prodName The name of the producer; the artist name
@@ -138,6 +133,7 @@ contract Producer {
 
         Producer seller = Producer(_contract);
         bool sent = false;
+        uint _price;
 
         if (_licenseType == LicenseType.Exclusive) {
             require(alreadyBought[_owner][_trackID][0] == false);
@@ -145,7 +141,7 @@ contract Producer {
             _price = seller.getExclusivePrice(_trackID);
             require(msg.value >= _price);
             (sent, ) = _owner.call{value: _price}("");
-            require(sent, "Failed to send Ether (Exclusive Purchase).");
+            assert(sent == true);
             licensedTracks.push(LicensedTrack(_owner, _contract, _trackID,  LicenseType.Exclusive));
             emit LicenseBought();
         }
@@ -156,7 +152,7 @@ contract Producer {
             _price = seller.getNonExclusivePrice(_trackID);
             require(msg.value >= _price);
             (sent, ) = _owner.call{value: _price}("");
-            require(sent, "Failed to send Ether (Non-exclusive Purchase).");
+            require(sent == true);
             licensedTracks.push(LicensedTrack(_owner, _contract, _trackID,  LicenseType.NonExclusive));
             emit LicenseBought();
         }
