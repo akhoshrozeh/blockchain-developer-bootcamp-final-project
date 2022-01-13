@@ -143,6 +143,8 @@ async function setExPrice() {
     return;
   }
   await searchContract.methods.setExclusivePrice(selectedTrack[0], (price)).send({from: ethereum.selectedAddress});
+  alert("Transaction complete! License price updated.");
+  location.reload();
 }
 
 async function setNonExPrice() {
@@ -152,6 +154,8 @@ async function setNonExPrice() {
     return;
   }
   await searchContract.methods.setNonExclusivePrice(selectedTrack[0], (price)).send({from: ethereum.selectedAddress});
+  alert("Transaction complete! License price updated.");
+  location.reload();
 }
 
 async function renderSetPriceButtons() {
@@ -185,7 +189,6 @@ async function renderSetPriceButtons() {
   document.getElementById("non-ex-button").addEventListener("click", setNonExPrice);
 }
 
-// TODO: Create div that tells which track is selected!
 
 async function showTracks() {
   console.log("showing tracks...");
@@ -349,7 +352,8 @@ async function buyExcluLic() {
     console.log("PRICE: " , price)
     
     await mmUserContract.methods.buyLicense(searchAddress, searchContractAddress, (selectedTrack[0]), 0).send({from: ethereum.selectedAddress, value:price});
-
+    // location.reload();
+    alert("Transaction complete! Track license is on profile now.")
   }
   catch(e) {
     console.log("Couldn't buy exclusive license for this track ID: " + selectedTrack + ". Error: ");
@@ -368,7 +372,8 @@ async function buyNonExcluLic() {
     console.log("PRICE: " , price)
     
     await mmUserContract.methods.buyLicense(searchAddress, searchContractAddress, (selectedTrack[0]), 1).send({from: ethereum.selectedAddress, value:price});
-
+    alert("Transaction complete! Track license is on profile now.")
+    // location.reload();
   }
   catch(e) {
     console.log("Couldn't buy exclusive license for this track ID: " + selectedTrack + ". Error: ");
