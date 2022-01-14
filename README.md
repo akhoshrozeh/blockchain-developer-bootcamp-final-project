@@ -6,7 +6,6 @@ My final project is a dApp that serves as a marketplace for producers to buy and
 https://hopeful-franklin-f7fc17.netlify.app
 
 ## Running Locally (with Ganache GUI)
-### Note: These steps setup a new ProducerFactory contract and run 
 ### Setting up the repo
 1. Clone the repo by running `git clone https://github.com/akhoshrozeh/blockchain-developer-bootcamp-final-project.git`
 2. Use `Node 12.19.0`
