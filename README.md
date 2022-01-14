@@ -80,6 +80,9 @@ Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_
 ## Public Ethereum wallet for certification:
 `0x29f66cf6b3821d32fE8a46805C0420Ef101a187A`
 
+## Screen Recording Link
+`https://youtu.be/ZZvECDHmTbo`
+
 ## Workflow
 1. Register as an producer.
 2. Create a track.
