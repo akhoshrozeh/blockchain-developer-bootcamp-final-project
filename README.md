@@ -70,7 +70,15 @@ Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_
   (c) A list of Licensed Tracks
   (d) mappings of TrackID to their license (exclusive and non-exclusive) price (Wei).
 
+## Directory Structure 
+`/front-end`: contains all HTML, CSS, and JS files that make up the frontend
+`/truffle/contracts`: Smart contracts that are deployed on Rinkeby testnet.
+`/truffle/migrations`: Migration files for deploying contracts in `/truffle/contracts` directory.
+`/truffle/tests`: JS file that contrains 10 unit tests for the smart contracts.
+`/node_modules`: Dependencies for the project.
 
+## Public Ethereum wallet for certification:
+`0x29f66cf6b3821d32fE8a46805C0420Ef101a187A`
 
 ## Workflow
 1. Register as an producer.
