@@ -33,6 +33,7 @@ Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_
 3. Run `truffle test`
 
 ## Deploying your own ProducerFactory to a testnet (Rinkeby)
+### The following is not neccesary to run locally.
 ### Setting up Infura Project
 1. Go to https://infura.io/
 2. Create an Infura account or sign in to an existing account and select `Create a New Project`.  
@@ -72,7 +73,7 @@ Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_
 
 
 
-## Workflow (How to use the app)
+## Workflow
 1. Register as an producer.
 2. Create a track.
 3. View other Producers' profiles by setting URL to `https://hopeful-franklin-f7fc17.netlify.app/user.html?contractOwner={Contract Owner Address}`
@@ -87,13 +88,6 @@ Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_
 2. Select the Track you wish to adjust.
 3. Enter the value the value (in Wei) in the text input.
 4. Click either 'Set Exclusive Price' or 'Set Non-Exclusive Price'.
-
-### Purchasing Licenses for Tracks
-1. Users can search the wesbite for producers by name or by address.
-2. Each producer has a page containing their tracks.
-3. Each track will have a price for an exclusive and non-exclusive license.
-4. A user can click to purchase the license through Metamask once they've created an account. 
-5. Once the transaction is complete, the buyer's Producer contract will be updated with data that will verify they have a license. 
 
 
 ## Possible Extensions for the Future
