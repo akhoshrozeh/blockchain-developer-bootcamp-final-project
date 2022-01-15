@@ -2,25 +2,34 @@ const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
-  entry: "./debugger",
+  entry: "./debugger.js",
+  devtool: "source-map",
+  target: "node",
 
   module: {
     rules: [
       {
         test: /\.js$/,
-        loader: "babel-loader",
-        query: {
-          presets: [["babel-preset-env", { targets: { node: "6.14" } }]],
-          plugins: ["transform-object-rest-spread", "transform-runtime"]
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [
+              [
+                "@babel/preset-env",
+                { targets: { node: "12.0" }, modules: false }
+              ]
+            ],
+            plugins: ["@babel/plugin-transform-runtime"]
+          }
         },
+        exclude: [path.resolve(__dirname, "..", "node_modules")],
         include: [path.resolve(__dirname, "..", "lib")]
       }
     ]
   },
 
-  target: "node",
-
   output: {
+    clean: true,
     library: "Debugger",
     libraryTarget: "umd",
     umdNamedDefine: true,
@@ -39,9 +48,7 @@ module.exports = {
   externals: [
     nodeExternals({
       modulesFromFile: true,
-      whitelist: ["node-interval-tree"]
+      allowlist: ["node-interval-tree"]
     })
-  ],
-
-  devtool: "source-map"
+  ]
 };

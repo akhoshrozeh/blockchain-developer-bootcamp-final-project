@@ -1,0 +1,29 @@
+{
+  "name": "blockchain-developer-bootcamp-final-project",
+  "version": "1.0.0",
+  "description": "My final project is a dApp that serves as a marketplace for producers to buy and sell licenses for tracks/beats. Users can check which producers/artists are authorized to use other producers'/artists' tracks.",
+  "main": "index.js",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.0",
+    "dotenv": "^10.0.0",
+    "ganache-cli": "^6.12.2",
+    "truffle": "^5.4.29",
+    "truffle-assertions": "^0.9.2",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "web3": "^1.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akhoshrozeh/blockchain-developer-bootcamp-final-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akhoshrozeh/blockchain-developer-bootcamp-final-project/issues"
+  },
+  "homepage": "https://github.com/akhoshrozeh/blockchain-developer-bootcamp-final-project#readme"
+}
