@@ -28,7 +28,7 @@ https://hopeful-franklin-f7fc17.netlify.app
 ## Running Tests
 Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_producerFactory-tests.js`
 1. Go to `/truffle` directory
-2. Make sure your local blockchain is running (Ganache) on port 8545.
+2. Make sure your local blockchain is running (Ganache) on port 8545 and has been configured with `/truffle/truffle_config.js`.
 3. Run `truffle test`
 
 ## Deploying your own ProducerFactory to a testnet (Rinkeby)
