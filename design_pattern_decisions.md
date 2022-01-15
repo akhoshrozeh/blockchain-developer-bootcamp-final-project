@@ -1,5 +1,8 @@
 # Design Patterns
 
+## Inheritance and Interfaces
+Producer.sol inherits from OpenZeppelin's Ownable.sol contract, making use of the onlyOwner modifier. 
+
 ## Inter-Contract Execution
 Producer.sol can instantiate another Producer contract object and calls it's function to get the price of a track.
 
