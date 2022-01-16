@@ -78,10 +78,10 @@ Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_
 `/node_modules`: Dependencies for the project.
 
 ## Public Ethereum wallet for certification:
-`0x29f66cf6b3821d32fE8a46805C0420Ef101a187A`
+`0x5B7E00c8eDC439aA66F38b8d40BFc8f87d0a2D28`
 
 ## Screen Recording Link
-`https://youtu.be/ZZvECDHmTbo`
+`https://youtu.be/xfGOHi0uMZY`
 
 ## Workflow
 1. Register as an producer.
