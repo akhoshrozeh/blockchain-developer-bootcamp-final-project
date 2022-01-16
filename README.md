@@ -31,6 +31,8 @@ Tests for both `ProducerFactory.sol` and `Producer.sol` are in `/truffle/test/1_
 2. Make sure your local blockchain is running (Ganache) on port 8545 and has been configured with `/truffle/truffle_config.js`.
 3. Run `truffle test`
 
+Note: You encounter an error `truffle: command not found` or similar, you may need to run `../node_modules/.bin/truffle {compile,test}`
+
 ## Deploying your own ProducerFactory to a testnet (Rinkeby)
 ### The following is not neccesary to run locally.
 ### Setting up Infura Project
