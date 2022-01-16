@@ -1,0 +1,122 @@
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/Producer.sol
+> Compiling ./contracts/ProducerFactory.sol
+> Artifacts written to /Users/akhoshrozeh/Projects/consensys21/blockchain-developer-bootcamp-final-project/truffle/build/contracts
+> Compiled successfully using:
+   - solc: 0.8.10+commit.fc410830.Emscripten.clang
+
+
+
+Migrations dry-run (simulation)
+===============================
+> Network name:    'rinkeby-fork'
+> Network id:      4
+> Block gas limit: 30000000 (0x1c9c380)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > block number:        9997622
+   > block timestamp:     1642285534
+   > account:             0x5B7E00c8eDC439aA66F38b8d40BFc8f87d0a2D28
+   > balance:             0.199646114
+   > gas used:            176943 (0x2b32f)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.000353886 ETH
+
+   -------------------------------------
+   > Total cost:         0.000353886 ETH
+
+
+2_ProducerFactory_migration.js
+==============================
+
+   Replacing 'ProducerFactory'
+   ---------------------------
+   > block number:        9997624
+   > block timestamp:     1642285539
+   > account:             0x5B7E00c8eDC439aA66F38b8d40BFc8f87d0a2D28
+   > balance:             0.193173854
+   > gas used:            3208792 (0x30f658)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.006417584 ETH
+
+   -------------------------------------
+   > Total cost:         0.006417584 ETH
+
+
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0.00677147 ETH
+
+
+
+
+
+Starting migrations...
+======================
+> Network name:    'rinkeby'
+> Network id:      4
+> Block gas limit: 29941438 (0x1c8debe)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0x27b9d0460fd5831863964d79a17723d38ffe33838c1e07dbb7b56dc31256e87a
+   > Blocks: 0            Seconds: 12
+   > contract address:    0x0e6Db4fE1e892891972a91568B8AE27d159FF76b
+   > block number:        9997623
+   > block timestamp:     1642285557
+   > account:             0x5B7E00c8eDC439aA66F38b8d40BFc8f87d0a2D28
+   > balance:             0.19951689249806757
+   > gas used:            193243 (0x2f2db)
+   > gas price:           2.50000001 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00048310750193243 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.00048310750193243 ETH
+
+
+2_ProducerFactory_migration.js
+==============================
+
+   Replacing 'ProducerFactory'
+   ---------------------------
+   > transaction hash:    0x798966fbfa3d0295833f29b1a64b9cf303e8d7a9ba981a7ea35a2fb5a8196a3b
+   > Blocks: 1            Seconds: 12
+   > contract address:    0xD1C06259B9f78fa5aA7fd6dc6Cc2f8A10AFD79f2
+   > block number:        9997625
+   > block timestamp:     1642285587
+   > account:             0x5B7E00c8eDC439aA66F38b8d40BFc8f87d0a2D28
+   > balance:             0.19138056746552227
+   > gas used:            3208792 (0x30f658)
+   > gas price:           2.50000001 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00802198003208792 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.00802198003208792 ETH
+
+
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0.00850508753402035 ETH

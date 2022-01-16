@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.10;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 /// @title A contract that stores all data about the Producer
 /// @author Anthony Khoshrozeh
 /// @notice This contract can be updated to represent a Producer's own tracks and licensed tracks
-contract Producer {
+contract Producer is Ownable {
     string prodName;
-    address payable owner;
+    address payable c_owner;
     uint idCounter; 
 
     /// @notice An array that contains all the Producer's tracks
@@ -56,10 +58,10 @@ contract Producer {
         revert();
     }
     
-    modifier isOwner() {
-        require(msg.sender == owner);
-        _;
-    }
+    // modifier isOwner() {
+    //     require(msg.sender == owner);
+    //     _;
+    // }
     
     /// @notice The _owner parameter is the account who called 'createProducer' in ProducerFactory.sol
     /// @param _prodName The name of the producer; the artist name
@@ -67,7 +69,8 @@ contract Producer {
     constructor(string memory _prodName, address payable _owner) {
         idCounter = 0;
         prodName = _prodName;
-        owner = _owner;
+        c_owner = _owner;
+        _transferOwnership(_owner);
 
     }
 
@@ -79,14 +82,14 @@ contract Producer {
     /// @param _trackID Used to determine which track to update its price
     /// @param _price The price in Wei for an exclusive license of the track
     /// @notice Sets the price for an exclusive license of a track
-    function setExclusivePrice(uint _trackID, uint _price) public isOwner {
+    function setExclusivePrice(uint _trackID, uint _price) public onlyOwner {
         excluPrice[_trackID] = _price;
     }
 
     /// @param _trackID Used to determine which track to update its price
     /// @param _price The price in Wei for a non-exclusive license of the track
     /// @notice Sets the price for a non-exclusive license of a track
-    function setNonExclusivePrice(uint _trackID, uint _price) public isOwner {
+    function setNonExclusivePrice(uint _trackID, uint _price) public onlyOwner {
         nonExcluPrice[_trackID] = _price;
     }
 
@@ -107,7 +110,7 @@ contract Producer {
     /// @param _excluPrice The price of the an exclusive license in Wei
     /// @param _nonExcluPrice The price of the a non-exclusive license in Wei
     /// @notice Creates the track object and stores it in the contract's storage; unique id is set for it and updated
-    function createTrack(string memory _name, string memory _CID, uint _excluPrice, uint _nonExcluPrice) public isOwner {
+    function createTrack(string memory _name, string memory _CID, uint _excluPrice, uint _nonExcluPrice) public onlyOwner {
         Track memory t = Track(_name, _CID, idCounter, msg.sender);
         setExclusivePrice(idCounter, _excluPrice);
         setNonExclusivePrice(idCounter, _nonExcluPrice);
@@ -126,7 +129,7 @@ contract Producer {
         public payable {
         
         require(msg.sender != _owner);
-        require(_owner != owner);
+        require(_owner != c_owner);
         require((_licenseType == LicenseType.Exclusive || _licenseType == LicenseType.NonExclusive),
          "Enter a valid LicenseType (0 or 1)");
 

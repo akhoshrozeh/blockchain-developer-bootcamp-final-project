@@ -5,7 +5,7 @@ let walletConnected = false;
 
 import producerBuild from './Producer.json' assert { type: "json" };;
 import factoryBuild from './ProducerFactory.json' assert { type: "json" };;
-const factoryAddress = "0xaaDb1F4521e940ae2853448A5bC4022d2b59d9DC";
+const factoryAddress = "0xD1C06259B9f78fa5aA7fd6dc6Cc2f8A10AFD79f2";
 const factoryABI = factoryBuild.abi;
 const producerABI = producerBuild.abi;
 
